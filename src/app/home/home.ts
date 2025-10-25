@@ -1,12 +1,12 @@
 import { Component } from '@angular/core';
 import { Task } from '../models/task';
-import { TaskButtonComponent } from '../shared/task-button/task-button';
-// import { TaskListComponent } from '../shared/task-button/task-List';
+import { TaskFormComponent } from '../shared/task-form/task-form';
+import { TaskListComponent } from '../shared/task-list/task-list';
 
 @Component({
   selector: 'app-home',
   standalone: true,             
-  imports: [TaskButtonComponent], 
+  imports: [TaskFormComponent, TaskListComponent], 
   templateUrl: './home.html',
   styleUrls: ['./home.scss']
 })

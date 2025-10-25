@@ -1,6 +1,6 @@
 import { Component,Output,EventEmitter  } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Task } from '../../models/task'
+import { Task } from '../../models/task';
+import { TaskService } from '../../services/task.service';
 
 @Component({
   selector: 'app-task-button',
@@ -10,21 +10,23 @@ import { Task } from '../../models/task'
   styleUrl: './task-button.scss',
 })
 
-
 export class TaskButtonComponent  {
-  private readonly dataUrl = 'http://127.0.0.1:8000/users';
-  constructor(private http:HttpClient){}
-
-    NewTask: Task = {
+  NewTask: Task = {
     myid: 3,
     title: 'test',
     description: 'test',
     tags: ['test','test']
   };
 
+  constructor(private taskService: TaskService){}
+
   handleClick() {
-    this.http.post<Task>(this.dataUrl, this.NewTask).subscribe({
-      next: (res) => console.log('POST success:', res),
+    this.taskService.addTask(this.NewTask).subscribe({
+      next: (res) => {
+        console.log('POST success:', res);
+        // 发送成功后触发列表刷新
+        this.taskService.triggerRefresh();
+      },
       error: (err) => console.error('POST error:', err)
     });
   }
