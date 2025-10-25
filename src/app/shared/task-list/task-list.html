@@ -1,18 +1,51 @@
 <div class="task-list">
-  <h3>Task List</h3>
+  <h3>用户列表</h3>
   
-  <div *ngIf="tasks.length === 0" class="empty">
-    No tasks yet
+  <!-- 搜索框 -->
+  <div class="search-section">
+    <div class="search-box">
+      <input 
+        type="text" 
+        [(ngModel)]="searchTerm" 
+        (input)="onSearch()"
+        placeholder="按标题搜索任务..."
+        class="search-input">
+      <button 
+        *ngIf="searchTerm" 
+        (click)="clearSearch()" 
+        class="clear-btn">
+        ✕
+      </button>
+    </div>
+    <button (click)="loadTasks()" class="refresh-btn">刷新列表</button>
   </div>
   
-  <div *ngFor="let task of tasks" class="task-item">
-    <div class="task-info">
-      <span class="task-id">ID: {{task.myid}}</span>
-      <span class="task-title">{{task.title}}</span>
+  <div *ngIf="loading" class="loading">
+    加载中...
+  </div>
+  
+  <div *ngIf="!loading && filteredTasks.length === 0 && tasks.length > 0" class="no-results">
+    没有找到匹配的任务
+  </div>
+  
+  <div *ngIf="!loading && tasks.length === 0" class="empty">
+    暂无数据
+  </div>
+  
+  <div *ngIf="!loading && filteredTasks.length > 0" class="task-items">
+    <div *ngFor="let task of filteredTasks" class="task-item">
+      <div class="task-info">
+        <span class="task-id">ID: {{task.myid}}</span>
+        <span class="task-title">{{task.title}}</span>
+      </div>
+      <div class="task-description">{{task.description}}</div>
+      <div class="task-tags">
+        <span *ngFor="let tag of task.tags" class="tag">{{tag}}</span>
+      </div>
     </div>
-    <div class="task-description">{{task.description}}</div>
-    <div class="task-tags">
-      <span *ngFor="let tag of task.tags" class="tag">{{tag}}</span>
-    </div>
+  </div>
+  
+  <div *ngIf="error" class="error">
+    加载失败: {{error}}
   </div>
 </div>

@@ -31,4 +31,35 @@ export class TaskService {
   getRefreshObservable(): Observable<boolean> {
     return this.refreshSubject.asObservable();
   }
+
+  // 前端搜索功能 - 只根据标题搜索
+  searchTasks(tasks: Task[], searchTerm: string): Task[] {
+    console.log('Service search - tasks:', tasks);
+    console.log('Service search - searchTerm:', searchTerm);
+    
+    if (!searchTerm.trim()) {
+      console.log('Empty search term, returning all tasks');
+      return tasks;
+    }
+    
+    const term = searchTerm.toLowerCase().trim();
+    const results = tasks.filter(task => {
+      const taskTitle = task.title.toLowerCase().trim();
+      
+      // 多种匹配方式
+      const exactMatch = taskTitle === term;
+      const includesMatch = taskTitle.includes(term);
+      const startsWithMatch = taskTitle.startsWith(term);
+      const endsWithMatch = taskTitle.endsWith(term);
+      
+      const titleMatch = exactMatch || includesMatch || startsWithMatch || endsWithMatch;
+      
+      console.log(`Search: "${term}" in "${taskTitle}"`);
+      console.log(`  Exact: ${exactMatch}, Includes: ${includesMatch}, Result: ${titleMatch}`);
+      return titleMatch;
+    });
+    
+    console.log('Search results:', results);
+    return results;
+  }
 }
